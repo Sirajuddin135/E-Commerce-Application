@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "jwt_secret",
+  "type": "java.lang.String",
+  "description": "A description for 'jwt_secret'"
+}]}
