@@ -1,8 +1,11 @@
 package com.app.entites;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,20 +26,17 @@ public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "order_id")
 	private Integer orderId;
 
 	private LocalDate orderDate;
 	private String orderStatus;
-	private Integer totalAmount;
+	private Double totalAmount;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id")
-	private Address address;
+	private List<Product> products = new ArrayList<>();
 	
-//	private List<Product> productList;
-//	
 }

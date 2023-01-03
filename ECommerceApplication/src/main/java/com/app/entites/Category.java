@@ -1,5 +1,6 @@
 package com.app.entites;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -8,18 +9,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int categoryId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer categoryId;
+	
 	private String categoryName;
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-//	@JsonIgnore
-//	private List<Product> productList;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+	private List<Product> productList = new ArrayList<>();
 }
