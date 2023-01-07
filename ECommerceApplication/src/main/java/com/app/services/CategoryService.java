@@ -3,12 +3,15 @@ package com.app.services;
 import java.util.List;
 
 import com.app.entites.Category;
-import com.app.entites.Product;
+import com.app.payloads.CategoryDTO;
 
 public interface CategoryService {
-
-	Category addProduct(String categoryName, Product product);
 	
-	List<Product> searchByCategory(String categoryName);
+	CategoryDTO createCategory(Category category);
+	
+	List<CategoryDTO> getCategories();
 
+	CategoryDTO updateCategory(Category category, Integer categoryId);
+	
+	String deleteCategory(Integer categoryId);
 }

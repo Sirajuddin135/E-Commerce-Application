@@ -12,12 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Category {
 
 	@Id
@@ -26,12 +28,7 @@ public class Category {
 	
 	private String categoryName;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Product> products = new ArrayList<>();
 	
-	
-	public Category(String categoryName, List<Product> products) {
-		this.categoryName = categoryName;
-		this.products = products;
-	}
 }
