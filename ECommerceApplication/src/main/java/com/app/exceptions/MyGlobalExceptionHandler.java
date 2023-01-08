@@ -15,43 +15,43 @@ import com.app.payloads.APIResponse;
 
 @RestControllerAdvice
 public class MyGlobalExceptionHandler {
-	
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<APIResponse> myResourceNotFoundException(ResourceNotFoundException e) {
 		String message = e.getMessage();
-		
+
 		APIResponse res = new APIResponse(message, false);
-		
+
 		return new ResponseEntity<APIResponse>(res, HttpStatus.NOT_FOUND);
 	}
-	
+
 	@ExceptionHandler(APIException.class)
 	public ResponseEntity<APIResponse> myAPIException(APIException e) {
 		String message = e.getMessage();
-		
+
 		APIResponse res = new APIResponse(message, false);
-		
+
 		return new ResponseEntity<APIResponse>(res, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> myMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 		Map<String, String> res = new HashMap<>();
-		
+
 		e.getBindingResult().getAllErrors().forEach(err -> {
 			String fieldName = ((FieldError) err).getField();
 			String message = err.getDefaultMessage();
-			
+
 			res.put(fieldName, message);
 		});
-		
+
 		return new ResponseEntity<Map<String, String>>(res, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(MissingPathVariableException.class)
 	public ResponseEntity<APIResponse> myMissingPathVariableException(MissingPathVariableException e) {
 		APIResponse res = new APIResponse(e.getMessage(), false);
-		
+
 		return new ResponseEntity<APIResponse>(res, HttpStatus.BAD_REQUEST);
 	}
 }

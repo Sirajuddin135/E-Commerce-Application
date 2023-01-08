@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDTO {
-	
+
 	private Integer categoryId;
 	private String categoryName;
 //	private List<ProductDTO> products = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.app.entites;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,28 +17,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer productId;
-	
+
 	private String productName;
 	private String image;
 	private String description;
 	private Integer quantity;
 	private double price;
 	private Integer rating;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "cart_id")
-	private Cart cart;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "order_id")
-	private Order order;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-	
+
 }

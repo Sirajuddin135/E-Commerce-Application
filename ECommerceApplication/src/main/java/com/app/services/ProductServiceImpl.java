@@ -15,6 +15,8 @@ import com.app.payloads.ProductDTO;
 import com.app.repositories.CategoryRepo;
 import com.app.repositories.ProductRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -27,88 +29,92 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Transactional
 	@Override
 	public ProductDTO addProduct(Integer categoryId, Product product) {
 
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-		
+
 		boolean flag = true;
-		
+
 		List<Product> products = category.getProducts();
-		
-		for(int i = 0; i < products.size(); i++) {
-			if(products.get(i).getProductName().equals(product.getProductName()) && 
-					products.get(i).getDescription().equals(product.getDescription())) {
-				
+
+		for (int i = 0; i < products.size(); i++) {
+			if (products.get(i).getProductName().equals(product.getProductName())
+					&& products.get(i).getDescription().equals(product.getDescription())) {
+
 				flag = false;
 				break;
 			}
 		}
-		
-		if(flag) {
+
+		if (flag) {
 			product.setCategory(category);
-			
+
 			Product savedProduct = productRepo.save(product);
-			
+
 			return modelMapper.map(savedProduct, ProductDTO.class);
-		}  else {
+		} else {
 			throw new APIException("Product already exists !!!");
 		}
 	}
-	
+
+	@Override
+	public List<ProductDTO> getAllProducts() {
+		List<Product> products = productRepo.findAll();
+
+		List<ProductDTO> productDTOs = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+				.collect(Collectors.toList());
+
+		return productDTOs;
+	}
+
+	@Transactional
 	@Override
 	public List<ProductDTO> searchByCategory(Integer categoryId) {
-		
-		Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+		Category category = categoryRepo.findById(categoryId)
+				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
 		List<Product> products = category.getProducts();
-		
-		if(products.size() == 0) {
+
+		if (products.size() == 0) {
 			throw new APIException("Category " + categoryId + " doesn't contain any products !!!");
 		}
-		
-		List<ProductDTO> productDTOs = products.stream().map(p -> modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
-		
+
+		List<ProductDTO> productDTOs = products.stream().map(p -> modelMapper.map(p, ProductDTO.class))
+				.collect(Collectors.toList());
+
 		return productDTOs;
 	}
 
 	@Override
-	public ProductDTO updateProduct(Integer categoryId, Integer productId, Product product) {
-		Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-		
-		Product p = categoryRepo.findByProducts(categoryId, productId);
-		
-		if(p == null) {
-			throw new APIException("Product not found with productId: " + productId + " in a category with categoryId: " + categoryId);
+	public ProductDTO updateProduct(Integer productId, Product product) {
+		Product p = productRepo.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		if (p == null) {
+			throw new APIException("Product not found with productId: " + productId);
 		}
-		
+
 		product.setProductId(productId);
-		product.setCategory(category);
-		
+		product.setCategory(p.getCategory());
+
 		Product savedProduct = productRepo.save(product);
-		
-		return modelMapper.map(savedProduct, ProductDTO.class);	
+
+		return modelMapper.map(savedProduct, ProductDTO.class);
 	}
 
 	@Override
-	public String deleteProduct(Integer categoryId,Integer productId) {
-		
-		Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-		
-		Product product = categoryRepo.findByProducts(categoryId, productId);
-		
-		if(product == null) {
-			throw new APIException("Product not found with productId: " + productId + " in a category with categoryId: " + categoryId);
-		}
-		
-		category.getProducts().remove(product);
-		
-		productRepo.delete(product);
-		
-		categoryRepo.save(category);
-		
-		return "Product with productId: " + productId + " deleted successfully from category with categoryId: " + categoryId;
+	public String deleteProduct(Integer productId) {
+
+		Product p = productRepo.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		productRepo.delete(p);
+
+		return "Product with productId: " + productId + " deleted successfully !!!";
 	}
 
 }

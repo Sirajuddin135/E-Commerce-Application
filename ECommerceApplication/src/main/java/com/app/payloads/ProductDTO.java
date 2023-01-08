@@ -16,5 +16,5 @@ public class ProductDTO {
 	private double price;
 	private Integer rating;
 //	private CategoryDTO category;
-	
+
 }

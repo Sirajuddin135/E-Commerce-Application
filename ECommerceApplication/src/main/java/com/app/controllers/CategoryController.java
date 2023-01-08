@@ -19,38 +19,39 @@ import com.app.payloads.CategoryDTO;
 import com.app.services.CategoryService;
 
 @RestController
-@RequestMapping("/api/user/categories")
+@RequestMapping("/api/user")
 public class CategoryController {
-	
+
 	@Autowired
 	private CategoryService categoryService;
-	
-	@PostMapping("")
+
+	@PostMapping("/categories")
 	public ResponseEntity<CategoryDTO> createCategory(@RequestBody Category category) {
 		CategoryDTO savedCategoryDTO = categoryService.createCategory(category);
-		
+
 		return new ResponseEntity<CategoryDTO>(savedCategoryDTO, HttpStatus.CREATED);
 	}
-	
-	@GetMapping("")
+
+	@GetMapping("/categories")
 	public ResponseEntity<List<CategoryDTO>> getCategories() {
 		List<CategoryDTO> categories = categoryService.getCategories();
-		
+
 		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.CREATED);
 	}
-	
-	@PutMapping("/{categoryId}")
-	public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category category, @PathVariable Integer categoryId) {
+
+	@PutMapping("/categories/{categoryId}")
+	public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category category,
+			@PathVariable Integer categoryId) {
 		CategoryDTO categoryDTO = categoryService.updateCategory(category, categoryId);
-		
+
 		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.CREATED);
 	}
-	
-	@DeleteMapping("/{categoryId}")
+
+	@DeleteMapping("/categories/{categoryId}")
 	public ResponseEntity<String> deleteCategory(@PathVariable Integer categoryId) {
 		String status = categoryService.deleteCategory(categoryId);
-		
+
 		return new ResponseEntity<String>(status, HttpStatus.CREATED);
 	}
-	
+
 }

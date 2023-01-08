@@ -7,7 +7,6 @@ import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,16 +39,15 @@ public class User {
 	private String email;
 	private String password;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
-	
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), 
-		inverseJoinColumns = @JoinColumn(name = "address_id"),
-		uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "address_id"}),
-		indexes = {@Index(name = "IDX_USER_ADDRESS", columnList = "user_id, address_id")})
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"), uniqueConstraints = @UniqueConstraint(columnNames = {
+			"user_id", "address_id" }), indexes = {
+					@Index(name = "IDX_USER_ADDRESS", columnList = "user_id, address_id") })
 	private Set<Address> addresses = new HashSet<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

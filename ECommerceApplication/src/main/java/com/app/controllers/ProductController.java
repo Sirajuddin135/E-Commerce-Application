@@ -21,36 +21,44 @@ import com.app.services.ProductService;
 @RestController
 @RequestMapping("/api/user")
 public class ProductController {
-	
+
 	@Autowired
 	private ProductService productService;
-	
-	@PostMapping("/categories/{categoryId}/product")
+
+	@PostMapping("/products/categories/{categoryId}")
 	public ResponseEntity<ProductDTO> addProduct(@PathVariable Integer categoryId, @RequestBody Product product) {
-		
+
 		ProductDTO savedProduct = productService.addProduct(categoryId, product);
-		
+
 		return new ResponseEntity<ProductDTO>(savedProduct, HttpStatus.CREATED);
 	}
-	
-	@GetMapping("/products/{categoryId}")
-	public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Integer categoryId) {
-		List<ProductDTO> products = productService.searchByCategory(categoryId);
-		
+
+	@GetMapping("/products")
+	public ResponseEntity<List<ProductDTO>> getAllProducts() {
+		List<ProductDTO> products = productService.getAllProducts();
+
 		return new ResponseEntity<List<ProductDTO>>(products, HttpStatus.FOUND);
 	}
-	
-	@PutMapping("/categories/{categoryId}/products/{productId}")
-	public ResponseEntity<ProductDTO> updateProductByCategory(@PathVariable Integer categoryId, @PathVariable Integer productId, @RequestBody Product product) {
-		ProductDTO updatedProduct = productService.updateProduct(categoryId, productId, product);
-		
+
+	@GetMapping("/products/categories/{categoryId}")
+	public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Integer categoryId) {
+		List<ProductDTO> products = productService.searchByCategory(categoryId);
+
+		return new ResponseEntity<List<ProductDTO>>(products, HttpStatus.FOUND);
+	}
+
+	@PutMapping("/products/{productId}")
+	public ResponseEntity<ProductDTO> updateProductByCategory(@PathVariable Integer productId,
+			@RequestBody Product product) {
+		ProductDTO updatedProduct = productService.updateProduct(productId, product);
+
 		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.FOUND);
 	}
-	
-	@DeleteMapping("/categories/{categoryId}/products/{productId}")
-	public ResponseEntity<String> deleteProductByCategory(@PathVariable Integer categoryId, @PathVariable Integer productId) {
-		String status = productService.deleteProduct(categoryId, productId);
-		
+
+	@DeleteMapping("/products/{productId}")
+	public ResponseEntity<String> deleteProductByCategory(@PathVariable Integer productId) {
+		String status = productService.deleteProduct(productId);
+
 		return new ResponseEntity<String>(status, HttpStatus.FOUND);
 	}
 
