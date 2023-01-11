@@ -21,10 +21,9 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer cartId;
 
-	private Double totalPrice;
-	private String paymentType;
+	private Double totalPrice = 0.0;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cart")
 	@JoinColumn(name = "user_id")
 	private User user;
 

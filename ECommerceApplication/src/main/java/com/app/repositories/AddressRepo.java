@@ -8,4 +8,7 @@ import com.app.entites.Address;
 @Repository
 public interface AddressRepo extends JpaRepository<Address, Integer> {
 
+	Address findByCountryAndStateAndCityAndPincodeAndStreetAndBuildingName(String country, String state, String city,
+			String street, String pincode, String buidlingName);
+
 }

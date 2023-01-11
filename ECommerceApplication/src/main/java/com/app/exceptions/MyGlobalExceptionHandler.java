@@ -3,6 +3,7 @@ package com.app.exceptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -50,6 +51,13 @@ public class MyGlobalExceptionHandler {
 
 	@ExceptionHandler(MissingPathVariableException.class)
 	public ResponseEntity<APIResponse> myMissingPathVariableException(MissingPathVariableException e) {
+		APIResponse res = new APIResponse(e.getMessage(), false);
+
+		return new ResponseEntity<APIResponse>(res, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<APIResponse> myDataIntegrityException(DataIntegrityViolationException e) {
 		APIResponse res = new APIResponse(e.getMessage(), false);
 
 		return new ResponseEntity<APIResponse>(res, HttpStatus.BAD_REQUEST);
