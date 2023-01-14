@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-		boolean flag = true;
+		boolean isProductNotPresent = true;
 
 		List<Product> products = category.getProducts();
 
@@ -44,13 +44,16 @@ public class ProductServiceImpl implements ProductService {
 			if (products.get(i).getProductName().equals(product.getProductName())
 					&& products.get(i).getDescription().equals(product.getDescription())) {
 
-				flag = false;
+				isProductNotPresent = false;
 				break;
 			}
 		}
 
-		if (flag) {
+		if (isProductNotPresent) {
 			product.setCategory(category);
+
+			double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+			product.setSpecialPrice(specialPrice);
 
 			Product savedProduct = productRepo.save(product);
 
@@ -100,6 +103,9 @@ public class ProductServiceImpl implements ProductService {
 
 		product.setProductId(productId);
 		product.setCategory(p.getCategory());
+		
+		double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+		product.setSpecialPrice(specialPrice);
 
 		Product savedProduct = productRepo.save(product);
 

@@ -1,5 +1,7 @@
 package com.app.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,24 +31,31 @@ public class UserController {
 		return new ResponseEntity<UserDTO>(registeredUser, HttpStatus.CREATED);
 	}
 	
+	@GetMapping("")
+	public ResponseEntity<List<UserDTO>> getUsers() {
+		List<UserDTO> userDTOs = userService.getAllUsers();
+		
+		return new ResponseEntity<List<UserDTO>>(userDTOs, HttpStatus.FOUND);
+	}
+	
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId) {
 		UserDTO user = userService.getUserById(userId);
 		
-		return new ResponseEntity<UserDTO>(user, HttpStatus.CREATED);
+		return new ResponseEntity<UserDTO>(user, HttpStatus.FOUND);
 	}
 	
 	@PutMapping("/{userId}")
 	public ResponseEntity<UserDTO> updateUser(@PathVariable Integer userId, @RequestBody UserDTO userDTO) {
 		UserDTO updatedUser = userService.updateUser(userId, userDTO);
 		
-		return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.CREATED);
+		return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable Integer userId) {
 		String status = userService.deleteUser(userId);
 		
-		return new ResponseEntity<String>(status, HttpStatus.CREATED);
+		return new ResponseEntity<String>(status, HttpStatus.OK);
 	}
 }

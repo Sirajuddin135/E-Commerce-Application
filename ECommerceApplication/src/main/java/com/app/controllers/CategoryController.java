@@ -36,7 +36,7 @@ public class CategoryController {
 	public ResponseEntity<List<CategoryDTO>> getCategories() {
 		List<CategoryDTO> categories = categoryService.getCategories();
 
-		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.CREATED);
+		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.FOUND);
 	}
 
 	@PutMapping("/categories/{categoryId}")
@@ -44,14 +44,14 @@ public class CategoryController {
 			@PathVariable Integer categoryId) {
 		CategoryDTO categoryDTO = categoryService.updateCategory(category, categoryId);
 
-		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.CREATED);
+		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/categories/{categoryId}")
 	public ResponseEntity<String> deleteCategory(@PathVariable Integer categoryId) {
 		String status = categoryService.deleteCategory(categoryId);
 
-		return new ResponseEntity<String>(status, HttpStatus.CREATED);
+		return new ResponseEntity<String>(status, HttpStatus.OK);
 	}
 
 }

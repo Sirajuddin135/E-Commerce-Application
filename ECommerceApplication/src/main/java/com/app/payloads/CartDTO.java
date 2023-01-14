@@ -1,5 +1,7 @@
 package com.app.payloads;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,4 +13,5 @@ public class CartDTO {
 	
 	private Integer cartId;
 	private Double totalPrice = 0.0;
+	private List<ProductDTO> products;
 }

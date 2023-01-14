@@ -52,14 +52,14 @@ public class ProductController {
 			@RequestBody Product product) {
 		ProductDTO updatedProduct = productService.updateProduct(productId, product);
 
-		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.FOUND);
+		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/products/{productId}")
 	public ResponseEntity<String> deleteProductByCategory(@PathVariable Integer productId) {
 		String status = productService.deleteProduct(productId);
 
-		return new ResponseEntity<String>(status, HttpStatus.FOUND);
+		return new ResponseEntity<String>(status, HttpStatus.OK);
 	}
 
 }
