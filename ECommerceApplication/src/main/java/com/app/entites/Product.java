@@ -45,6 +45,6 @@ public class Product {
 //	private List<Cart> carts = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<CartItem> items = new ArrayList<>();
+	private List<CartItem> products = new ArrayList<>();
 
 }

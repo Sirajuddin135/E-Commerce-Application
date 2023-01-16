@@ -1,5 +1,6 @@
 package com.app.payloads;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -13,5 +14,5 @@ public class CartDTO {
 	
 	private Integer cartId;
 	private Double totalPrice = 0.0;
-	private List<ProductDTO> products;
+	private List<ProductDTO> products = new ArrayList<>();
 }
