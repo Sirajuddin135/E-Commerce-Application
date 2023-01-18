@@ -7,16 +7,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.entites.Cart;
 import com.app.entites.Category;
 import com.app.entites.Product;
 import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
+import com.app.payloads.CartDTO;
 import com.app.payloads.ProductDTO;
+import com.app.repositories.CartItemRepo;
 import com.app.repositories.CategoryRepo;
 import com.app.repositories.ProductRepo;
 
 import jakarta.transaction.Transactional;
 
+@Transactional
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -27,9 +31,14 @@ public class ProductServiceImpl implements ProductService {
 	private CategoryRepo categoryRepo;
 
 	@Autowired
+	private CartService cartService;
+
+	@Autowired
+	private CartItemRepo cartItemRepo;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 
-	@Transactional
 	@Override
 	public ProductDTO addProduct(Integer categoryId, Product product) {
 
@@ -73,7 +82,6 @@ public class ProductServiceImpl implements ProductService {
 		return productDTOs;
 	}
 
-	@Transactional
 	@Override
 	public List<ProductDTO> searchByCategory(Integer categoryId) {
 
@@ -94,21 +102,39 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductDTO updateProduct(Integer productId, Product product) {
-		Product p = productRepo.findById(productId)
+		Product productFromDB = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-		if (p == null) {
+		if (productFromDB == null) {
 			throw new APIException("Product not found with productId: " + productId);
 		}
 
 		product.setProductId(productId);
-		product.setCategory(p.getCategory());
-		
+		product.setCategory(productFromDB.getCategory());
+
 		double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
 		product.setSpecialPrice(specialPrice);
 
 		Product savedProduct = productRepo.save(product);
+		
+//		List<CartDTO> carts = cartService.getAllCarts();
+		
+		List<Cart> carts = cartItemRepo.findCartByProductId(productId);
+		
+		List<CartDTO> cartDTOs = carts.stream().map(cart -> {
+			CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
+			List<ProductDTO> products = cart.getProducts().stream()
+					.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+
+			cartDTO.setProducts(products);
+
+			return cartDTO;
+
+		}).collect(Collectors.toList());
+
+		cartDTOs.forEach(cart -> cartService.updateProductInCarts(cart.getCartId(), productId));
+		
 		return modelMapper.map(savedProduct, ProductDTO.class);
 	}
 
@@ -117,6 +143,10 @@ public class ProductServiceImpl implements ProductService {
 
 		Product p = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		List<CartDTO> carts = cartService.getAllCarts();
+
+		carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
 
 		productRepo.delete(p);
 

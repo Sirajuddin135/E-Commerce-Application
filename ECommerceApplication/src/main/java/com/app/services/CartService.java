@@ -3,7 +3,6 @@ package com.app.services;
 import java.util.List;
 
 import com.app.payloads.CartDTO;
-import com.app.payloads.CartItemDTO;
 
 public interface CartService {
 	
@@ -11,10 +10,11 @@ public interface CartService {
 	
 	List<CartDTO> getAllCarts();
 	
-	CartDTO getCart(Integer cartId);
+	CartDTO getCart(String emailId, Integer cartId);
 	
-	CartDTO updateProductInCart(Integer cartId, Integer productId, Integer quantity);
-//	CartItemDTO updateProductInCart(Integer cartId, Integer productId, Integer quantity);
+	CartDTO updateProductQuantityInCart(Integer cartId, Integer productId, Integer quantity);
+	
+	void updateProductInCarts(Integer cartId, Integer productId);
 	
 	String deleteProductFromCart(Integer cartId, Integer productId);
 }

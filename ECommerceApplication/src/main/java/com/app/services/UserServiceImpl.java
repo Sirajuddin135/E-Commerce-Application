@@ -24,6 +24,7 @@ import com.app.repositories.UserRepo;
 
 import jakarta.transaction.Transactional;
 
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -39,7 +40,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@Transactional
 	@Override
 	public UserDTO registerUser(UserDTO userDTO) {
 
@@ -83,7 +83,26 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	@Transactional
+	@Override
+	public List<UserDTO> getAllUsers() {
+		List<User> users = userRepo.findAll();
+
+		if(users.size() == 0) {
+			throw new APIException("No User exists !!!");
+		}
+		
+		List<UserDTO> userDTOs = users.stream().map(user -> {
+			UserDTO dto = modelMapper.map(user, UserDTO.class);
+
+			dto.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
+
+			return dto;
+
+		}).collect(Collectors.toList());
+
+		return userDTOs;
+	}
+	
 	@Override
 	public UserDTO getUserById(Integer userId) {
 		User user = userRepo.findById(userId)
@@ -96,7 +115,6 @@ public class UserServiceImpl implements UserService {
 		return userDTO;
 	}
 
-	@Transactional
 	@Override
 	public UserDTO updateUser(Integer userId, UserDTO userDTO) {
 		User user = userRepo.findById(userId)
@@ -141,27 +159,6 @@ public class UserServiceImpl implements UserService {
 		userRepo.delete(user);
 
 		return "User with userId " + userId + " deleted successfully!!!";
-	}
-
-	@Transactional
-	@Override
-	public List<UserDTO> getAllUsers() {
-		List<User> users = userRepo.findAll();
-
-		if(users.size() == 0) {
-			throw new APIException("No User exists !!!");
-		}
-		
-		List<UserDTO> userDTOs = users.stream().map(user -> {
-			UserDTO dto = modelMapper.map(user, UserDTO.class);
-
-			dto.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
-
-			return dto;
-
-		}).collect(Collectors.toList());
-
-		return userDTOs;
 	}
 
 }

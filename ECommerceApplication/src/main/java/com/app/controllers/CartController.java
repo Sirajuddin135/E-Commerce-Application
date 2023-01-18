@@ -14,45 +14,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.payloads.CartDTO;
-import com.app.payloads.CartItemDTO;
 import com.app.services.CartService;
 
 @RestController
-@RequestMapping("/api/user/carts")
+@RequestMapping("/api/user")
 public class CartController {
 	
 	@Autowired
 	private CartService cartService;
 	
-	@PostMapping("/{cartId}/product/{productId}/quantity/{quantity}")
+	@PostMapping("/carts/{cartId}/product/{productId}/quantity/{quantity}")
 	public ResponseEntity<CartDTO> addProductToCart(@PathVariable Integer cartId, @PathVariable Integer productId, @PathVariable Integer quantity) {
 		CartDTO cartDTO = cartService.addProductToCart(cartId, productId, quantity);
 		
 		return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("")
+	@GetMapping("/carts")
 	public ResponseEntity<List<CartDTO>> getCarts() {
 		List<CartDTO> cartDTOs = cartService.getAllCarts();
 		
 		return new ResponseEntity<List<CartDTO>>(cartDTOs, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/{cartId}")
-	public ResponseEntity<CartDTO> getCartById(@PathVariable Integer cartId) {
-		CartDTO cartDTO = cartService.getCart(cartId);
+	@GetMapping("{emailId}/carts/{cartId}")
+	public ResponseEntity<CartDTO> getCartById(@PathVariable String emailId, @PathVariable Integer cartId) {
+		CartDTO cartDTO = cartService.getCart(emailId, cartId);
 		
 		return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/{cartId}/product/{productId}/quantity/{quantity}")
+	@PutMapping("/carts/{cartId}/product/{productId}/quantity/{quantity}")
 	public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Integer cartId, @PathVariable Integer productId, @PathVariable Integer quantity) {
-		CartDTO cartDTO = cartService.updateProductInCart(cartId, productId, quantity);
+		CartDTO cartDTO = cartService.updateProductQuantityInCart(cartId, productId, quantity);
 		
 		return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.FOUND);
 	}
 	
-	@DeleteMapping("/{cartId}/product/{productId}")
+	@DeleteMapping("/carts/{cartId}/product/{productId}")
 	public ResponseEntity<String> deleteProductFromCart(@PathVariable Integer cartId, @PathVariable Integer productId) {
 		String status = cartService.deleteProductFromCart(cartId, productId);
 		
