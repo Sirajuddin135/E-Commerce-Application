@@ -1,7 +1,6 @@
 package com.app.payloads;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ public class OrderDTO {
 	private Integer orderId;
 	private UserDTO user;
 	private LocalDate orderDate;
-	private List<CartItemDTO> cartItems = new ArrayList<>();
+	private List<CartItemDTO> cartItems;
 	private Double totalAmount;
 	private String orderStatus;
 

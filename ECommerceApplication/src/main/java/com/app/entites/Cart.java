@@ -25,18 +25,12 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer cartId;
 
-	private Double totalPrice = 0.0;
-
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cart")
+	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-//	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-//	@JoinTable(name = "cart_items", joinColumns = @JoinColumn(name = "cart_id"), 
-//		inverseJoinColumns = @JoinColumn(name = "product_id"))
-//	private List<Product> products = new ArrayList<>();
-	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CartItem> products = new ArrayList<>();
+	private List<CartItem> cartItems = new ArrayList<>();
 
+	private Double totalPrice = 0.0;
 }

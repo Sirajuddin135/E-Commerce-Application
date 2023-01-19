@@ -13,6 +13,9 @@ import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.CategoryDTO;
 import com.app.repositories.CategoryRepo;
 
+import jakarta.transaction.Transactional;
+
+@Transactional
 @Service
 public class CategoryServiceImpl implements CategoryService {
 

@@ -50,16 +50,14 @@ public class User {
 	private Set<Role> roles = new HashSet<>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-//	@ManyToMany(cascade = CascadeType.ALL) // error while deleting
 	@JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), 
 		inverseJoinColumns = @JoinColumn(name = "address_id"))
 	private Set<Address> addresses;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "cart_id")
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Order> orders = new ArrayList<>();
 
 }

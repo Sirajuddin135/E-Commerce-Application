@@ -1,7 +1,5 @@
 package com.app.entites;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,15 +29,19 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer orderId;
 
-	private LocalDate orderDate;
-	private String orderStatus;
-	private Double totalAmount;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	private List<OrderItem> orderItems = new ArrayList<>();
+
+	private LocalDate orderDate;
 	
-	@OneToMany(mappedBy = "order", cascade = ALL)
-	private List<CartItem> orderedProducts = new ArrayList<>();
+	@OneToOne
+	@JoinColumn(name = "payment_id")
+	private Payment paymentType;
 	
+	private Double totalAmount;
+	private String orderStatus;
 }

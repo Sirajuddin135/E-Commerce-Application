@@ -74,7 +74,7 @@ public class CartServiceImpl implements CartService {
 
 			CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-			List<ProductDTO> productDTOs = cart.getProducts().stream()
+			List<ProductDTO> productDTOs = cart.getCartItems().stream()
 					.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
 			cartDTO.setProducts(productDTOs);
@@ -98,7 +98,7 @@ public class CartServiceImpl implements CartService {
 		List<CartDTO> cartDTOs = carts.stream().map(cart -> {
 			CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-			List<ProductDTO> products = cart.getProducts().stream()
+			List<ProductDTO> products = cart.getCartItems().stream()
 					.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
 			cartDTO.setProducts(products);
@@ -112,16 +112,16 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public CartDTO getCart(String emailId, Integer cartId) {
-		Cart cart = cartItemRepo.findCartByEmailAndCartId(emailId, cartId);
+		Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
+		
+		System.out.println(cart + "is null");
 		
 		if(cart == null) {
 			throw new ResourceNotFoundException("Cart", "cartId", cartId);
 		}
 		
-		List<ProductDTO> products = cart.getProducts().stream()
-				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
-
-		System.out.println(products);
+//		List<ProductDTO> products = cart.getCartItems().stream()
+//				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
 		CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
@@ -188,7 +188,7 @@ public class CartServiceImpl implements CartService {
 
 		CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-		List<ProductDTO> productDTOs = cart.getProducts().stream()
+		List<ProductDTO> productDTOs = cart.getCartItems().stream()
 				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
 		cartDTO.setProducts(productDTOs);
