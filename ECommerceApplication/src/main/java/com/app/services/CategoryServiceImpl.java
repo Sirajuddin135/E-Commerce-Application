@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDTO updateCategory(Category category, Integer categoryId) {
+	public CategoryDTO updateCategory(Category category, Long categoryId) {
 		Category savedCategory = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public String deleteCategory(Integer categoryId) {
+	public String deleteCategory(Long categoryId) {
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 

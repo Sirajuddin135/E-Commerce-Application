@@ -1,6 +1,5 @@
 package com.app.services;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,10 +67,12 @@ public class UserServiceImpl implements UserService {
 				address = addressRepo.save(address);
 			}
 
-			user.setAddresses(Collections.singleton(address));
+			user.setAddresses(List.of(address));
 
 			User registeredUser = userRepo.save(user);
 
+			cart.setUser(registeredUser);
+			
 			userDTO = modelMapper.map(registeredUser, UserDTO.class);
 
 			userDTO.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public UserDTO getUserById(Integer userId) {
+	public UserDTO getUserById(Long userId) {
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDTO updateUser(Integer userId, UserDTO userDTO) {
+	public UserDTO updateUser(Long userId, UserDTO userDTO) {
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 
@@ -141,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
 			address = addressRepo.save(address);
 
-			user.setAddresses(Collections.singleton(address));
+			user.setAddresses(List.of(address));
 		}
 
 		userDTO = modelMapper.map(user, UserDTO.class);
@@ -152,7 +153,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String deleteUser(Integer userId) {
+	public String deleteUser(Long userId) {
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 

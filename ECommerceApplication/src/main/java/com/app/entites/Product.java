@@ -26,7 +26,7 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer productId;
+	private Long productId;
 
 	private String productName;
 	private String image;

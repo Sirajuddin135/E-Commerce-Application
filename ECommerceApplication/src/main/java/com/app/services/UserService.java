@@ -9,9 +9,9 @@ public interface UserService {
 	
 	List<UserDTO> getAllUsers();
 	
-	UserDTO getUserById(Integer userId);
+	UserDTO getUserById(Long userId);
 	
-	UserDTO updateUser(Integer userId, UserDTO userDTO);
+	UserDTO updateUser(Long userId, UserDTO userDTO);
 	
-	String deleteUser(Integer userId);
+	String deleteUser(Long userId);
 }

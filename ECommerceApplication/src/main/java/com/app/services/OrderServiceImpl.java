@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 	public ModelMapper modelMapper;
 
 	@Override
-	public OrderDTO placeOrder(String emailId, Integer cartId) {
+	public OrderDTO placeOrder(String emailId, Long cartId) {
 
 		Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
 
@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDTO getOrder(String emailId, Integer orderId) {
+	public OrderDTO getOrder(String emailId, Long orderId) {
 		Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
 
 		if (order == null) {
@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public String deleteOrder(String email, Integer orderId) {
+	public String deleteOrder(String email, Long orderId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

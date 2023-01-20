@@ -7,13 +7,13 @@ import com.app.payloads.ProductDTO;
 
 public interface ProductService {
 
-	ProductDTO addProduct(Integer categoryId, Product product);
+	ProductDTO addProduct(Long categoryId, Product product);
 
 	List<ProductDTO> getAllProducts();
 
-	List<ProductDTO> searchByCategory(Integer categoryId);
+	List<ProductDTO> searchByCategory(Long categoryId);
 
-	ProductDTO updateProduct(Integer productId, Product product);
+	ProductDTO updateProduct(Long productId, Product product);
 
-	String deleteProduct(Integer productId);
+	String deleteProduct(Long productId);
 }

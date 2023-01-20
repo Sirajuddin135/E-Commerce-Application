@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryDTO {
 
-	private Integer categoryId;
+	private Long categoryId;
 	private String categoryName;
 //	private List<ProductDTO> products = new ArrayList<>();
 }

@@ -19,44 +19,44 @@ import com.app.payloads.ProductDTO;
 import com.app.services.ProductService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/products")
 public class ProductController {
 
 	@Autowired
 	private ProductService productService;
 
-	@PostMapping("/products/categories/{categoryId}")
-	public ResponseEntity<ProductDTO> addProduct(@PathVariable Integer categoryId, @RequestBody Product product) {
+	@PostMapping("/categories/{categoryId}")
+	public ResponseEntity<ProductDTO> addProduct(@PathVariable Long categoryId, @RequestBody Product product) {
 
 		ProductDTO savedProduct = productService.addProduct(categoryId, product);
 
 		return new ResponseEntity<ProductDTO>(savedProduct, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/products")
+	@GetMapping("")
 	public ResponseEntity<List<ProductDTO>> getAllProducts() {
 		List<ProductDTO> products = productService.getAllProducts();
 
 		return new ResponseEntity<List<ProductDTO>>(products, HttpStatus.FOUND);
 	}
 
-	@GetMapping("/products/categories/{categoryId}")
-	public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Integer categoryId) {
+	@GetMapping("/categories/{categoryId}")
+	public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
 		List<ProductDTO> products = productService.searchByCategory(categoryId);
 
 		return new ResponseEntity<List<ProductDTO>>(products, HttpStatus.FOUND);
 	}
 
-	@PutMapping("/products/{productId}")
-	public ResponseEntity<ProductDTO> updateProductByCategory(@PathVariable Integer productId,
+	@PutMapping("/{productId}")
+	public ResponseEntity<ProductDTO> updateProductByCategory(@PathVariable Long productId,
 			@RequestBody Product product) {
 		ProductDTO updatedProduct = productService.updateProduct(productId, product);
 
 		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/products/{productId}")
-	public ResponseEntity<String> deleteProductByCategory(@PathVariable Integer productId) {
+	@DeleteMapping("/{productId}")
+	public ResponseEntity<String> deleteProductByCategory(@PathVariable Long productId) {
 		String status = productService.deleteProduct(productId);
 
 		return new ResponseEntity<String>(status, HttpStatus.OK);

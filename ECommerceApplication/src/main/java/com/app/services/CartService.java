@@ -6,15 +6,15 @@ import com.app.payloads.CartDTO;
 
 public interface CartService {
 	
-	CartDTO addProductToCart(Integer cartId, Integer productId, Integer quantity);
+	CartDTO addProductToCart(Long cartId, Long productId, Integer quantity);
 	
 	List<CartDTO> getAllCarts();
 	
-	CartDTO getCart(String emailId, Integer cartId);
+	CartDTO getCart(String emailId, Long cartId);
 	
-	CartDTO updateProductQuantityInCart(Integer cartId, Integer productId, Integer quantity);
+	CartDTO updateProductQuantityInCart(Long cartId, Long productId, Integer quantity);
 	
-	void updateProductInCarts(Integer cartId, Integer productId);
+	void updateProductInCarts(Long cartId, Long productId);
 	
-	String deleteProductFromCart(Integer cartId, Integer productId);
+	String deleteProductFromCart(Long cartId, Long productId);
 }

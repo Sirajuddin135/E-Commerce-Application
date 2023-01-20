@@ -1,6 +1,6 @@
 package com.app.config;
 
 public class AppConstants {
-	public static final Integer ADMIN_ID = 101;
-	public static final Integer USER_ID = 102;
+	public static final Long ADMIN_ID = 101L;
+	public static final Long USER_ID = 102L;
 }

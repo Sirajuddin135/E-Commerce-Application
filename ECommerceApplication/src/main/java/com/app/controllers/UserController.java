@@ -18,7 +18,7 @@ import com.app.payloads.UserDTO;
 import com.app.services.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
 	
 	@Autowired
@@ -39,21 +39,21 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId) {
+	public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) {
 		UserDTO user = userService.getUserById(userId);
 		
 		return new ResponseEntity<UserDTO>(user, HttpStatus.FOUND);
 	}
 	
 	@PutMapping("/{userId}")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable Integer userId, @RequestBody UserDTO userDTO) {
+	public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
 		UserDTO updatedUser = userService.updateUser(userId, userDTO);
 		
 		return new ResponseEntity<UserDTO>(updatedUser, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable Integer userId) {
+	public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
 		String status = userService.deleteUser(userId);
 		
 		return new ResponseEntity<String>(status, HttpStatus.OK);

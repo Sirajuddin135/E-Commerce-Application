@@ -13,21 +13,21 @@ import com.app.payloads.OrderDTO;
 import com.app.services.OrderService;
 
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("/api/user")
 public class OrderController {
 	
 	@Autowired
 	public OrderService orderService;
 	
 	@PostMapping("/{emailId}/carts/{cartId}/orders")
-	public ResponseEntity<OrderDTO> orderProducts(@PathVariable String emailId, @PathVariable Integer cartId) {
+	public ResponseEntity<OrderDTO> orderProducts(@PathVariable String emailId, @PathVariable Long cartId) {
 		OrderDTO order = orderService.placeOrder(emailId, cartId);
 		
 		return new ResponseEntity<OrderDTO>(order, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{emailId}/orders/{orderId}")
-	public ResponseEntity<OrderDTO> getProduct(@PathVariable String emailId, @PathVariable Integer orderId) {
+	public ResponseEntity<OrderDTO> getProduct(@PathVariable String emailId, @PathVariable Long orderId) {
 		OrderDTO order = orderService.getOrder(emailId, orderId);
 		
 		return new ResponseEntity<OrderDTO>(order, HttpStatus.CREATED);

@@ -1,30 +1,28 @@
 package com.app.entites;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@EqualsAndHashCode(of = {"addressId"})
+@Data
+@Table(name = "addresses")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer addressId;
+	private Long addressId;
 
 	private String street;
 	private String buildingName;
@@ -34,7 +32,7 @@ public class Address {
 	private String pincode;
 
 	@ManyToMany(mappedBy = "addresses")
-	private Set<User> users = new HashSet<>();
+	private List<User> users = new ArrayList<>();
 	
 	public Address(String country, String state, String city, String pincode, String street, String buildingName) {
 		this.country = country;

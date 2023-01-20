@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDTO {
 	
-	private Integer orderId;
+	private Long orderId;
 	private UserDTO user;
 	private LocalDate orderDate;
 	private List<CartItemDTO> cartItems;

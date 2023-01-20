@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public ProductDTO addProduct(Integer categoryId, Product product) {
+	public ProductDTO addProduct(Long categoryId, Product product) {
 
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> searchByCategory(Integer categoryId) {
+	public List<ProductDTO> searchByCategory(Long categoryId) {
 
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductDTO updateProduct(Integer productId, Product product) {
+	public ProductDTO updateProduct(Long productId, Product product) {
 		Product productFromDB = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
@@ -139,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public String deleteProduct(Integer productId) {
+	public String deleteProduct(Long productId) {
 
 		Product p = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));

@@ -27,7 +27,7 @@ public class Order {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer orderId;
+	private Long orderId;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -40,7 +40,7 @@ public class Order {
 	
 	@OneToOne
 	@JoinColumn(name = "payment_id")
-	private Payment paymentType;
+	private Payment payment;
 	
 	private Double totalAmount;
 	private String orderStatus;

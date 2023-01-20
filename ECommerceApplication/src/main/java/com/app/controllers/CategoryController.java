@@ -41,14 +41,14 @@ public class CategoryController {
 
 	@PutMapping("/categories/{categoryId}")
 	public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category category,
-			@PathVariable Integer categoryId) {
+			@PathVariable Long categoryId) {
 		CategoryDTO categoryDTO = categoryService.updateCategory(category, categoryId);
 
 		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/categories/{categoryId}")
-	public ResponseEntity<String> deleteCategory(@PathVariable Integer categoryId) {
+	public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
 		String status = categoryService.deleteCategory(categoryId);
 
 		return new ResponseEntity<String>(status, HttpStatus.OK);

@@ -37,13 +37,19 @@ public class CartServiceImpl implements CartService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public CartDTO addProductToCart(Integer cartId, Integer productId, Integer quantity) {
+	public CartDTO addProductToCart(Long cartId, Long productId, Integer quantity) {
 
 		Cart cart = cartRepo.findById(cartId)
 				.orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
 
 		Product product = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		CartItem cartItem = cartItemRepo.findCartItemByProductIdAndCartId(cartId, productId);
+
+		if (cartItem != null) {
+			throw new APIException("Product " + product.getProductName() + " already exists in the cart");
+		}
 
 		if (product.getQuantity() == 0) {
 			throw new APIException("Product: " + product.getProductName() + " not available !!!");
@@ -54,37 +60,29 @@ public class CartServiceImpl implements CartService {
 					+ " less than or equal to the quantity " + product.getQuantity() + ".");
 		}
 
-		CartItem cartItem = cartItemRepo.findCartItemByProductIdAndCartId(cartId, productId);
+		CartItem newCartItem = new CartItem();
 
-		if (cartItem == null) {
+		newCartItem.setProduct(product);
+		newCartItem.setCart(cart);
+		newCartItem.setQuantity(quantity);
+		newCartItem.setDiscount(product.getDiscount());
+		newCartItem.setProductPrice(product.getSpecialPrice());
 
-			CartItem newCartItem = new CartItem();
+		cartItemRepo.save(newCartItem);
 
-			newCartItem.setProduct(product);
-			newCartItem.setCart(cart);
-			newCartItem.setQuantity(quantity);
-			newCartItem.setDiscount(product.getDiscount());
-			newCartItem.setProductPrice(product.getSpecialPrice());
-			
-			cartItemRepo.save(newCartItem);
+		product.setQuantity(product.getQuantity() - quantity);
 
-			product.setQuantity(product.getQuantity() - quantity);
+		cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
 
-			cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
+		CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-			CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+		List<ProductDTO> productDTOs = cart.getCartItems().stream()
+				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
-			List<ProductDTO> productDTOs = cart.getCartItems().stream()
-					.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+		cartDTO.setProducts(productDTOs);
 
-			cartDTO.setProducts(productDTOs);
+		return cartDTO;
 
-			return cartDTO;
-
-		} else {
-
-			throw new APIException("Product " + product.getProductName() + " already exists in the cart");
-		}
 	}
 
 	@Override
@@ -111,15 +109,15 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public CartDTO getCart(String emailId, Integer cartId) {
+	public CartDTO getCart(String emailId, Long cartId) {
 		Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
-		
+
 		System.out.println(cart + "is null");
-		
-		if(cart == null) {
+
+		if (cart == null) {
 			throw new ResourceNotFoundException("Cart", "cartId", cartId);
 		}
-		
+
 //		List<ProductDTO> products = cart.getCartItems().stream()
 //				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
 
@@ -129,7 +127,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void updateProductInCarts(Integer cartId, Integer productId) {
+	public void updateProductInCarts(Long cartId, Long productId) {
 		Cart cart = cartRepo.findById(cartId)
 				.orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
 
@@ -152,7 +150,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public CartDTO updateProductQuantityInCart(Integer cartId, Integer productId, Integer quantity) {
+	public CartDTO updateProductQuantityInCart(Long cartId, Long productId, Integer quantity) {
 		Cart cart = cartRepo.findById(cartId)
 				.orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
 
@@ -198,7 +196,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public String deleteProductFromCart(Integer cartId, Integer productId) {
+	public String deleteProductFromCart(Long cartId, Long productId) {
 		Cart cart = cartRepo.findById(cartId)
 				.orElseThrow(() -> new ResourceNotFoundException("Cart", "cartId", cartId));
 

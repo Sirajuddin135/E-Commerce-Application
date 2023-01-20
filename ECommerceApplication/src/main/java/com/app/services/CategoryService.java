@@ -11,7 +11,7 @@ public interface CategoryService {
 
 	List<CategoryDTO> getCategories();
 
-	CategoryDTO updateCategory(Category category, Integer categoryId);
+	CategoryDTO updateCategory(Category category, Long categoryId);
 
-	String deleteCategory(Integer categoryId);
+	String deleteCategory(Long categoryId);
 }

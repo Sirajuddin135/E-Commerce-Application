@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.app.entites.User;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Integer> {
+public interface UserRepo extends JpaRepository<User, Long> {
 	
 	@EntityGraph(attributePaths = {"address"})
 	User findByEmail(String email);
