@@ -42,13 +42,11 @@ public class User {
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 //	@ManyToMany(cascade = CascadeType.ALL) // error while deleting
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), 
-		inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), 
-		inverseJoinColumns = @JoinColumn(name = "address_id"))
+	@JoinTable(name = "user_address", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "address_id"))
 	private List<Address> addresses = new ArrayList<>();
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private CategoryRepo categoryRepo;
-
+	
 	@Autowired
 	private CartService cartService;
 
@@ -141,14 +141,14 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String deleteProduct(Long productId) {
 
-		Product p = productRepo.findById(productId)
+		Product product = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-		List<CartDTO> carts = cartService.getAllCarts();
-
+		productRepo.delete(product);
+		
+		List<Cart> carts = cartItemRepo.findCartByProductId(productId);
+		
 		carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
-
-		productRepo.delete(p);
 
 		return "Product with productId: " + productId + " deleted successfully !!!";
 	}
