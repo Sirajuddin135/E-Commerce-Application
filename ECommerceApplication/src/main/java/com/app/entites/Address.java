@@ -14,8 +14,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Table(name = "addresses")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
@@ -33,7 +33,7 @@ public class Address {
 
 	@ManyToMany(mappedBy = "addresses")
 	private List<User> users = new ArrayList<>();
-	
+
 	public Address(String country, String state, String city, String pincode, String street, String buildingName) {
 		this.country = country;
 		this.state = state;
