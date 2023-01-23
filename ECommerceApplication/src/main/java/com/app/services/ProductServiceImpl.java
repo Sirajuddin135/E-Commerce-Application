@@ -14,7 +14,7 @@ import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.CartDTO;
 import com.app.payloads.ProductDTO;
-import com.app.repositories.CartItemRepo;
+import com.app.repositories.CartRepo;
 import com.app.repositories.CategoryRepo;
 import com.app.repositories.ProductRepo;
 
@@ -29,13 +29,13 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private CategoryRepo categoryRepo;
-	
+
+	@Autowired
+	private CartRepo cartRepo;
+
 	@Autowired
 	private CartService cartService;
 
-	@Autowired
-	private CartItemRepo cartItemRepo;
-	
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -116,11 +116,11 @@ public class ProductServiceImpl implements ProductService {
 		product.setSpecialPrice(specialPrice);
 
 		Product savedProduct = productRepo.save(product);
-		
+
 //		List<CartDTO> carts = cartService.getAllCarts();
-		
-		List<Cart> carts = cartItemRepo.findCartByProductId(productId);
-		
+
+		List<Cart> carts = cartRepo.findCartsByProductId(productId);
+
 		List<CartDTO> cartDTOs = carts.stream().map(cart -> {
 			CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
@@ -134,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
 		}).collect(Collectors.toList());
 
 		cartDTOs.forEach(cart -> cartService.updateProductInCarts(cart.getCartId(), productId));
-		
+
 		return modelMapper.map(savedProduct, ProductDTO.class);
 	}
 
@@ -144,11 +144,11 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-		productRepo.delete(product);
-		
-		List<Cart> carts = cartItemRepo.findCartByProductId(productId);
-		
+		List<Cart> carts = cartRepo.findCartsByProductId(productId);
+
 		carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
+
+		productRepo.delete(product);
 
 		return "Product with productId: " + productId + " deleted successfully !!!";
 	}

@@ -101,7 +101,9 @@ public class UserServiceImpl implements UserService {
 		List<UserDTO> userDTOs = users.stream().map(user -> {
 			UserDTO dto = modelMapper.map(user, UserDTO.class);
 
-			dto.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
+			if(user.getAddresses().size() != 0) {
+				dto.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
+			}
 
 			CartDTO cart = modelMapper.map(user.getCart(), CartDTO.class);
 
@@ -151,24 +153,26 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(userDTO.getEmail());
 		user.setPassword(userDTO.getPassword());
 
-		String country = userDTO.getAddress().getCountry();
-		String state = userDTO.getAddress().getState();
-		String city = userDTO.getAddress().getCity();
-		String pincode = userDTO.getAddress().getPincode();
-		String street = userDTO.getAddress().getStreet();
-		String buildingName = userDTO.getAddress().getBuildingName();
-
-		Address address = addressRepo.findByCountryAndStateAndCityAndPincodeAndStreetAndBuildingName(country, state,
-				city, pincode, street, buildingName);
-
-		if (address == null) {
-			address = new Address(country, state, city, pincode, street, buildingName);
-
-			address = addressRepo.save(address);
-
-			user.setAddresses(List.of(address));
+		if(userDTO.getAddress() != null) {
+			String country = userDTO.getAddress().getCountry();
+			String state = userDTO.getAddress().getState();
+			String city = userDTO.getAddress().getCity();
+			String pincode = userDTO.getAddress().getPincode();
+			String street = userDTO.getAddress().getStreet();
+			String buildingName = userDTO.getAddress().getBuildingName();
+	
+			Address address = addressRepo.findByCountryAndStateAndCityAndPincodeAndStreetAndBuildingName(country, state,
+					city, pincode, street, buildingName);
+	
+			if (address == null) {
+				address = new Address(country, state, city, pincode, street, buildingName);
+	
+				address = addressRepo.save(address);
+	
+				user.setAddresses(List.of(address));
+			}
 		}
-
+		
 		userDTO = modelMapper.map(user, UserDTO.class);
 
 		userDTO.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
