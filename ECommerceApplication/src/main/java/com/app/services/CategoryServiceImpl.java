@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.entites.Category;
+import com.app.entites.Product;
 import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.CategoryDTO;
@@ -79,11 +80,11 @@ public class CategoryServiceImpl implements CategoryService {
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 		
-//		List<Product> products = category.getProducts();
-//		
-//		products.forEach(product -> {
-//			productService.deleteProduct(product.getProductId());
-//		});
+		List<Product> products = category.getProducts();
+
+		products.forEach(product -> {
+			productService.deleteProduct(product.getProductId());
+		});
 		
 		categoryRepo.delete(category);
 

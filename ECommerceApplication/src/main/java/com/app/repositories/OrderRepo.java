@@ -10,6 +10,10 @@ import com.app.entites.Order;
 public interface OrderRepo extends JpaRepository<Order, Long> {
 	
 //	@EntityGraph(attributePaths = {"user.addresses", "orderedProducts.product"})
-	@Query("SELECT o FROM Order o WHERE o.user.email = ?1 AND o.id = ?2")
+//	@Query("SELECT o FROM Order o WHERE o.user.email = ?1 AND o.id = ?2")
+//	Order findOrderByEmailAndOrderId(String email, Long cartId);
+	
+	@Query("SELECT o FROM Order o WHERE o.email = ?1 AND o.id = ?2")
 	Order findOrderByEmailAndOrderId(String email, Long cartId);
+	
 }

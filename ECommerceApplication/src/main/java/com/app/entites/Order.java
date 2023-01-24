@@ -29,11 +29,13 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+//	@ManyToOne
+//	@JoinColumn(name = "user_id")
+//	private User user;
+	
+	private String email;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	private LocalDate orderDate;

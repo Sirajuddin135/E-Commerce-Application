@@ -112,16 +112,16 @@ public class CartServiceImpl implements CartService {
 	public CartDTO getCart(String emailId, Long cartId) {
 		Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
 
-		System.out.println(cart + "is null");
-
 		if (cart == null) {
 			throw new ResourceNotFoundException("Cart", "cartId", cartId);
 		}
 
-//		List<ProductDTO> products = cart.getCartItems().stream()
-//				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
-
 		CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+		
+		List<ProductDTO> products = cart.getCartItems().stream()
+				.map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+
+		cartDTO.setProducts(products);
 
 		return cartDTO;
 	}

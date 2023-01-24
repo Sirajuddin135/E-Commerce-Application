@@ -117,8 +117,6 @@ public class ProductServiceImpl implements ProductService {
 
 		Product savedProduct = productRepo.save(product);
 
-//		List<CartDTO> carts = cartService.getAllCarts();
-
 		List<Cart> carts = cartRepo.findCartsByProductId(productId);
 
 		List<CartDTO> cartDTOs = carts.stream().map(cart -> {

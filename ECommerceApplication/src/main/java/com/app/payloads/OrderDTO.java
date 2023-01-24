@@ -1,7 +1,11 @@
 package com.app.payloads;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.app.entites.OrderItem;
+import com.app.entites.Payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +17,12 @@ import lombok.NoArgsConstructor;
 public class OrderDTO {
 	
 	private Long orderId;
-	private UserDTO user;
+//	private User user;
+	private List<OrderItem> orderItems = new ArrayList<>();
 	private LocalDate orderDate;
-	private List<CartItemDTO> cartItems;
+	private Payment payment;
 	private Double totalAmount;
 	private String orderStatus;
+	private String paymentMethod;
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.app.payloads.OrderDTO;
 
 public interface OrderService {
-	OrderDTO placeOrder(String emailId, Long cartId);
+	OrderDTO placeOrder(String emailId, Long cartId, OrderDTO orderDTO);
 	
 	OrderDTO getOrder(String emailId, Long orderId);
 	

@@ -22,11 +22,9 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long paymentId;
 
-	@OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "payment", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Order order;
 
-	private double amount;
-	private String paymentType;
-	private String status;
+	private String paymentMethod;
 
 }
