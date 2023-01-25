@@ -32,6 +32,6 @@ public class OrderItem {
 	
 	private Integer quantity;
 	private double discount;
-	private double productPrice;
+	private double orderedProductPrice;
 	
 }

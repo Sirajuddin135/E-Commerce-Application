@@ -3,6 +3,7 @@ package com.app.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import com.app.entites.CartItem;
 import com.app.entites.Order;
 import com.app.entites.OrderItem;
 import com.app.entites.Payment;
-import com.app.entites.User;
+import com.app.entites.Product;
+import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.OrderDTO;
 import com.app.repositories.CartItemRepo;
@@ -57,25 +59,38 @@ public class OrderServiceImpl implements OrderService {
 	public ModelMapper modelMapper;
 
 	@Override
-	public OrderDTO placeOrder(String emailId, Long cartId, OrderDTO orderDTO) {
+	public OrderDTO placeOrder(String emailId, Long cartId, String paymentMethod) {
 
 		Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
-		
-		User user = userRepo.findByEmail(emailId);
-		
+
 		if (cart == null) {
 			throw new ResourceNotFoundException("Cart", "cartId", cartId);
 		}
 
 		Order order = new Order();
 
-//		order.setUser(user);
 		order.setEmail(emailId);
 		order.setOrderDate(LocalDate.now());
+		
+		order.setTotalAmount(cart.getTotalPrice());
+		order.setOrderStatus("Order Accepted !");
+
+		Payment payment = new Payment();
+		payment.setOrder(order);
+		payment.setPaymentMethod(paymentMethod);
+		
+		payment = paymentRepo.save(payment);
+		
+		order.setPayment(payment);
 
 		Order savedOrder = orderRepo.save(order);
 		
 		List<CartItem> cartItems = cart.getCartItems();
+		
+		if(cartItems.size() == 0) {
+			throw new APIException("Cart is empty!!");
+		}
+		
 		List<OrderItem> orderItems = new ArrayList<>();
 
 		for (CartItem cartItem : cartItems) {
@@ -84,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
 			orderItem.setProduct(cartItem.getProduct());
 			orderItem.setQuantity(cartItem.getQuantity());
 			orderItem.setDiscount(cartItem.getDiscount());
-			orderItem.setProductPrice(cartItem.getProductPrice());
+			orderItem.setOrderedProductPrice(cartItem.getProductPrice());
 			orderItem.setOrder(savedOrder);
 			
 			orderItems.add(orderItem);
@@ -92,69 +107,40 @@ public class OrderServiceImpl implements OrderService {
 		
 		orderItemRepo.saveAll(orderItems);
 
-		cart.getCartItems().removeAll(cartItems);
-		
-		savedOrder.setTotalAmount(cart.getTotalPrice());
-		savedOrder.setOrderStatus("Order Accepted !");
+		cart.getCartItems().forEach(item -> {
+			int quantity = item.getQuantity();
+			
+			Product product = item.getProduct();
+					
+			cartService.deleteProductFromCart(cartId, item.getProduct().getProductId());
+			
+			product.setQuantity(product.getQuantity() - quantity);
+		});
 
-		Payment payment = new Payment();
-		payment.setOrder(savedOrder);
-		payment.setPaymentMethod(orderDTO.getPaymentMethod());
+		OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);		
 		
-		payment = paymentRepo.save(payment);
-		
-//		savedOrder.setPayment(payment);
-		
-//		cart.setTotalPrice(0.0);
-
-//		cartRepo.save(cart);
-
-		return modelMapper.map(savedOrder, OrderDTO.class);
+		return orderDTO;
 	}
 
 	@Override
 	public OrderDTO getOrder(String emailId, Long orderId) {
+		
 		Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
 
 		if (order == null) {
 			throw new ResourceNotFoundException("Order", "orderId", orderId);
 		}
 
-//		UserDTO user = userService.getUserById(order.getUser().getUserId());
-
-		OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
-		
-//		List<CartItem> cartItems = order.getOrderedProducts();
-//		List<CartItemDTO> orderedItems = new ArrayList<>();
-//		
-//		for (CartItem cartItem : cartItems) {
-//			CartItem orderItem = new CartItem();
-//
-//			orderItem.setProduct(cartItem.getProduct());
-//			orderItem.setQuantity(cartItem.getQuantity());
-//			orderItem.setDiscount(cartItem.getDiscount());
-//			orderItem.setProductPrice(cartItem.getProductPrice());
-//			orderItem.setOrder(order);
-//
-//			orderedItems.add(modelMapper.map(orderItem, CartItemDTO.class));
-//
-//		}
-		
-//		orderDTO.setUser(user);
-		
-		return orderDTO;
+		return modelMapper.map(order, OrderDTO.class);
 	}
 
 	@Override
 	public List<OrderDTO> getAllOrders(String emailId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String deleteOrder(String email, Long orderId) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Order> orders = orderRepo.findAll();
+		
+		List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+		
+		return orderDTOs;
 	}
 
 }
