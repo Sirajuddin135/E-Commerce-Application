@@ -18,14 +18,17 @@ import com.app.entites.Product;
 import com.app.payloads.ProductDTO;
 import com.app.services.ProductService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
-@RequestMapping("/api/user/products")
+@RequestMapping("/api/admin")
+@SecurityRequirement(name = "E-Commerce Application")
 public class ProductController {
 
 	@Autowired
 	private ProductService productService;
 
-	@PostMapping("/categories/{categoryId}")
+	@PostMapping("/categories/{categoryId}/products")
 	public ResponseEntity<ProductDTO> addProduct(@PathVariable Long categoryId, @RequestBody Product product) {
 
 		ProductDTO savedProduct = productService.addProduct(categoryId, product);
@@ -33,7 +36,7 @@ public class ProductController {
 		return new ResponseEntity<ProductDTO>(savedProduct, HttpStatus.CREATED);
 	}
 
-	@GetMapping("")
+	@GetMapping("/products")
 	public ResponseEntity<List<ProductDTO>> getAllProducts() {
 		List<ProductDTO> products = productService.getAllProducts();
 
@@ -47,7 +50,7 @@ public class ProductController {
 		return new ResponseEntity<List<ProductDTO>>(products, HttpStatus.FOUND);
 	}
 
-	@PutMapping("/{productId}")
+	@PutMapping("/products/{productId}")
 	public ResponseEntity<ProductDTO> updateProductByCategory(@PathVariable Long productId,
 			@RequestBody Product product) {
 		ProductDTO updatedProduct = productService.updateProduct(productId, product);
@@ -55,7 +58,7 @@ public class ProductController {
 		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{productId}")
+	@DeleteMapping("/products/{productId}")
 	public ResponseEntity<String> deleteProductByCategory(@PathVariable Long productId) {
 		String status = productService.deleteProduct(productId);
 

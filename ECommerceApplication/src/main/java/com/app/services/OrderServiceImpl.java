@@ -143,4 +143,18 @@ public class OrderServiceImpl implements OrderService {
 		return orderDTOs;
 	}
 
+	@Override
+	public OrderDTO updateOrder(String emailId, Long orderId, String orderStatus) {
+		
+		Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
+		
+		if (order == null) {
+			throw new ResourceNotFoundException("Order", "orderId", orderId);
+		}
+		
+		order.setOrderStatus(orderStatus);
+
+		return modelMapper.map(order, OrderDTO.class);
+	}
+
 }

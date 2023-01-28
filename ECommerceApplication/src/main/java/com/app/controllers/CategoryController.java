@@ -18,28 +18,31 @@ import com.app.entites.Category;
 import com.app.payloads.CategoryDTO;
 import com.app.services.CategoryService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
+@SecurityRequirement(name = "E-Commerce Application")
 public class CategoryController {
 
 	@Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/categories")
+	@PostMapping("/admin/category")
 	public ResponseEntity<CategoryDTO> createCategory(@RequestBody Category category) {
 		CategoryDTO savedCategoryDTO = categoryService.createCategory(category);
 
 		return new ResponseEntity<CategoryDTO>(savedCategoryDTO, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/categories")
+	@GetMapping("/public/categories")
 	public ResponseEntity<List<CategoryDTO>> getCategories() {
 		List<CategoryDTO> categories = categoryService.getCategories();
 
 		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.FOUND);
 	}
 
-	@PutMapping("/categories/{categoryId}")
+	@PutMapping("/admin/categories/{categoryId}")
 	public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category category,
 			@PathVariable Long categoryId) {
 		CategoryDTO categoryDTO = categoryService.updateCategory(category, categoryId);
@@ -47,7 +50,7 @@ public class CategoryController {
 		return new ResponseEntity<CategoryDTO>(categoryDTO, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/categories/{categoryId}")
+	@DeleteMapping("/admin/categories/{categoryId}")
 	public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
 		String status = categoryService.deleteCategory(categoryId);
 

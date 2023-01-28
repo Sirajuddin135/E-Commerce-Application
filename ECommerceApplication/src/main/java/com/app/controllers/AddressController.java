@@ -18,46 +18,49 @@ import com.app.entites.Address;
 import com.app.payloads.AddressDTO;
 import com.app.services.AddressService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
+@SecurityRequirement(name = "E-Commerce Application")
 public class AddressController {
 	
 	@Autowired
 	private AddressService addressService;
 	
-	@PostMapping("/address")
+	@PostMapping("/admin/address")
 	public ResponseEntity<AddressDTO> createAddress(@RequestBody AddressDTO addressDTO) {
 		AddressDTO savedAddressDTO = addressService.createAddress(addressDTO);
 		
 		return new ResponseEntity<AddressDTO>(savedAddressDTO, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/addresses")
+	@GetMapping("/admin/addresses")
 	public ResponseEntity<List<AddressDTO>> getAddresses() {
 		List<AddressDTO> addressDTOs = addressService.getAddresses();
 		
-		return new ResponseEntity<List<AddressDTO>>(addressDTOs, HttpStatus.CREATED);
+		return new ResponseEntity<List<AddressDTO>>(addressDTOs, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/address/{addressId}")
+	@GetMapping("/admin/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> getAddress(@PathVariable Long addressId) {
 		AddressDTO addressDTO = addressService.getAddress(addressId);
 		
-		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.CREATED);
+		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/address/{addressId}")
+	@PutMapping("/public/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> updateAddress(@PathVariable Long addressId, @RequestBody Address address) {
 		AddressDTO addressDTO = addressService.updateAddress(addressId, address);
 		
-		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.CREATED);
+		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/address/{addressId}")
+	@DeleteMapping("/admin/addresses/{addressId}")
 	public ResponseEntity<String> deleteAddress(@PathVariable Long addressId) {
 		String status = addressService.deleteAddress(addressId);
 		
-		return new ResponseEntity<String>(status, HttpStatus.CREATED);
+		return new ResponseEntity<String>(status, HttpStatus.OK);
 	}
 }

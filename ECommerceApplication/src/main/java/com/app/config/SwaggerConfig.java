@@ -22,4 +22,5 @@ public class SwaggerConfig {
 			.externalDocs(new ExternalDocumentation().description("E-Commerce App Documentation")
 			.url("http://localhost:8080/swagger-ui/index.html"));
 	}
+	
 }
