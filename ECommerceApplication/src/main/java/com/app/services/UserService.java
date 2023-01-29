@@ -5,7 +5,7 @@ import java.util.List;
 import com.app.payloads.UserDTO;
 
 public interface UserService {
-	UserDTO registerUser(UserDTO userDTO);
+	UserDTO registerUser(UserDTO userDTO, String roleName);
 	
 	List<UserDTO> getAllUsers();
 	

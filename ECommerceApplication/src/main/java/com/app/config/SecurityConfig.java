@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 	
 	@Autowired
@@ -37,10 +39,15 @@ public class SecurityConfig {
 			.csrf()
 			.disable()
 			.authorizeHttpRequests()
-			.requestMatchers(AppConstants.PUBLIC_URLS)
-			.permitAll()
-			.requestMatchers(HttpMethod.GET)
-			.permitAll()
+			.requestMatchers(AppConstants.PUBLIC_URLS).permitAll()
+			.requestMatchers(HttpMethod.GET, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
+			.requestMatchers(HttpMethod.POST, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
+			.requestMatchers(HttpMethod.PUT, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
+			.requestMatchers(HttpMethod.DELETE, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
+			.requestMatchers(HttpMethod.GET, AppConstants.ADMIN_URLS).hasRole("ADMIN")
+			.requestMatchers(HttpMethod.POST, AppConstants.ADMIN_URLS).hasRole("ADMIN")
+			.requestMatchers(HttpMethod.PUT, AppConstants.ADMIN_URLS).hasRole("ADMIN")
+			.requestMatchers(HttpMethod.DELETE, AppConstants.ADMIN_URLS).hasRole("ADMIN")
 			.anyRequest()
 			.authenticated()
 			.and()

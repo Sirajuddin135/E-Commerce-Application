@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public UserDTO registerUser(UserDTO userDTO) {
+	public UserDTO registerUser(UserDTO userDTO, String roleName) {
 
 		try {
 			User user = modelMapper.map(userDTO, User.class);
@@ -54,6 +54,11 @@ public class UserServiceImpl implements UserService {
 			Cart cart = new Cart();
 			user.setCart(cart);
 
+			if(roleName != null && roleName.equalsIgnoreCase("ADMIN")) {
+				Role role = roleRepo.findById(AppConstants.ADMIN_ID).get();
+				user.getRoles().add(role);
+			}
+			
 			Role role = roleRepo.findById(AppConstants.USER_ID).get();
 			user.getRoles().add(role);
 
