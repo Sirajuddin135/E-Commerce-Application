@@ -123,6 +123,19 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public List<OrderDTO> getOrdersByUser(String emailId) {
+		List<Order> orders = orderRepo.findAllByEmail(emailId);
+		
+		List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+		
+		if(orderDTOs.size() == 0) {
+			throw new APIException("No orders placed yet by the user with email: " + emailId);
+		}
+		
+		return orderDTOs;
+	}
+	
+	@Override
 	public OrderDTO getOrder(String emailId, Long orderId) {
 		
 		Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
@@ -135,10 +148,14 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<OrderDTO> getAllOrders(String emailId) {
+	public List<OrderDTO> getAllOrders() {
 		List<Order> orders = orderRepo.findAll();
 		
 		List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
+		
+		if(orderDTOs.size() == 0) {
+			throw new APIException("No orders placed yet by the users");
+		}
 		
 		return orderDTOs;
 	}

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.config.AppConstants;
@@ -42,6 +43,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private CartService cartService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -152,11 +156,13 @@ public class UserServiceImpl implements UserService {
 		User user = userRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 
+		String encodedPass = passwordEncoder.encode(userDTO.getPassword());
+		
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setMobileNumber(userDTO.getMobileNumber());
 		user.setEmail(userDTO.getEmail());
-		user.setPassword(userDTO.getPassword());
+		user.setPassword(encodedPass);
 
 		if(userDTO.getAddress() != null) {
 			String country = userDTO.getAddress().getCountry();

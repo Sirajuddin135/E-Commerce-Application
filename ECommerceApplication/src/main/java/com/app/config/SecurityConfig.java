@@ -3,7 +3,6 @@ package com.app.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -40,14 +39,8 @@ public class SecurityConfig {
 			.disable()
 			.authorizeHttpRequests()
 			.requestMatchers(AppConstants.PUBLIC_URLS).permitAll()
-			.requestMatchers(HttpMethod.GET, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
-			.requestMatchers(HttpMethod.POST, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
-			.requestMatchers(HttpMethod.PUT, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
-			.requestMatchers(HttpMethod.DELETE, AppConstants.USER_URLS).hasAnyRole("USER", "ADMIN")
-			.requestMatchers(HttpMethod.GET, AppConstants.ADMIN_URLS).hasRole("ADMIN")
-			.requestMatchers(HttpMethod.POST, AppConstants.ADMIN_URLS).hasRole("ADMIN")
-			.requestMatchers(HttpMethod.PUT, AppConstants.ADMIN_URLS).hasRole("ADMIN")
-			.requestMatchers(HttpMethod.DELETE, AppConstants.ADMIN_URLS).hasRole("ADMIN")
+			.requestMatchers(AppConstants.USER_URLS).hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(AppConstants.ADMIN_URLS).hasAuthority("ADMIN")
 			.anyRequest()
 			.authenticated()
 			.and()

@@ -12,7 +12,6 @@ import com.app.entites.Product;
 import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.CategoryDTO;
-import com.app.repositories.CartRepo;
 import com.app.repositories.CategoryRepo;
 
 import jakarta.transaction.Transactional;
@@ -23,12 +22,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryRepo categoryRepo;
-	
-	@Autowired
-	private CartRepo cartRepo;
-	
-	@Autowired
-	private CartService cartService;
 	
 	@Autowired
 	private ProductService productService;

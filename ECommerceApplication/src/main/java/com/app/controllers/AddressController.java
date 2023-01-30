@@ -22,42 +22,42 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 @SecurityRequirement(name = "E-Commerce Application")
 public class AddressController {
 	
 	@Autowired
 	private AddressService addressService;
 	
-	@PostMapping("/admin/address")
+	@PostMapping("/address")
 	public ResponseEntity<AddressDTO> createAddress(@RequestBody AddressDTO addressDTO) {
 		AddressDTO savedAddressDTO = addressService.createAddress(addressDTO);
 		
 		return new ResponseEntity<AddressDTO>(savedAddressDTO, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/admin/addresses")
+	@GetMapping("/addresses")
 	public ResponseEntity<List<AddressDTO>> getAddresses() {
 		List<AddressDTO> addressDTOs = addressService.getAddresses();
 		
 		return new ResponseEntity<List<AddressDTO>>(addressDTOs, HttpStatus.FOUND);
 	}
 	
-	@GetMapping("/admin/addresses/{addressId}")
+	@GetMapping("/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> getAddress(@PathVariable Long addressId) {
 		AddressDTO addressDTO = addressService.getAddress(addressId);
 		
 		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.FOUND);
 	}
 	
-	@PutMapping("/public/addresses/{addressId}")
+	@PutMapping("/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> updateAddress(@PathVariable Long addressId, @RequestBody Address address) {
 		AddressDTO addressDTO = addressService.updateAddress(addressId, address);
 		
 		return new ResponseEntity<AddressDTO>(addressDTO, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/admin/addresses/{addressId}")
+	@DeleteMapping("/addresses/{addressId}")
 	public ResponseEntity<String> deleteAddress(@PathVariable Long addressId) {
 		String status = addressService.deleteAddress(addressId);
 		

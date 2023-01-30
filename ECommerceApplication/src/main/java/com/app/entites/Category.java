@@ -26,7 +26,7 @@ public class Category {
 
 	private String categoryName;
 
-	@OneToMany(mappedBy = "category", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+	@OneToMany(mappedBy = "category", cascade =  CascadeType.ALL )
 	private List<Product> products;
 
 }

@@ -13,7 +13,7 @@ import com.app.entites.User;
 public interface UserRepo extends JpaRepository<User, Long> {
 	
 	@Query("SELECT u FROM User u JOIN FETCH u.addresses a WHERE a.addressId = ?1")
-	List<User> findByUserIdAndAddressId( Long addressId);
+	List<User> findByAddress(Long addressId);
 	
 	Optional<User> findByEmail(String email);
 }

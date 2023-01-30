@@ -32,9 +32,16 @@ public class OrderController {
 		return new ResponseEntity<OrderDTO>(order, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/admin/users/{emailId}/orders")
-	public ResponseEntity<List<OrderDTO>> getAllOrdersByUser(@PathVariable String emailId) {
-		List<OrderDTO> orders = orderService.getAllOrders(emailId);
+	@GetMapping("/admin/orders")
+	public ResponseEntity<List<OrderDTO>> getAllOrdersByUser() {
+		List<OrderDTO> orders = orderService.getAllOrders();
+		
+		return new ResponseEntity<List<OrderDTO>>(orders, HttpStatus.FOUND);
+	}
+	
+	@GetMapping("public/users/{emailId}/orders")
+	public ResponseEntity<List<OrderDTO>> getOrdersByUser(@PathVariable String emailId) {
+		List<OrderDTO> orders = orderService.getOrdersByUser(emailId);
 		
 		return new ResponseEntity<List<OrderDTO>>(orders, HttpStatus.FOUND);
 	}
