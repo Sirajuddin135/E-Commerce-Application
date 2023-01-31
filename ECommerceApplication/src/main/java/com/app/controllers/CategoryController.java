@@ -1,7 +1,5 @@
 package com.app.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +10,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.config.AppConstants;
 import com.app.entites.Category;
 import com.app.payloads.CategoryDTO;
+import com.app.payloads.CategoryResponse;
 import com.app.services.CategoryService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -29,17 +31,22 @@ public class CategoryController {
 	private CategoryService categoryService;
 
 	@PostMapping("/admin/category")
-	public ResponseEntity<CategoryDTO> createCategory(@RequestBody Category category) {
+	public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody Category category) {
 		CategoryDTO savedCategoryDTO = categoryService.createCategory(category);
 
 		return new ResponseEntity<CategoryDTO>(savedCategoryDTO, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/public/categories")
-	public ResponseEntity<List<CategoryDTO>> getCategories() {
-		List<CategoryDTO> categories = categoryService.getCategories();
+	public ResponseEntity<CategoryResponse> getCategories(
+			@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+			@RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+			@RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+		
+		CategoryResponse categoryResponse = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
 
-		return new ResponseEntity<List<CategoryDTO>>(categories, HttpStatus.FOUND);
+		return new ResponseEntity<CategoryResponse>(categoryResponse, HttpStatus.FOUND);
 	}
 
 	@PutMapping("/admin/categories/{categoryId}")

@@ -1,19 +1,20 @@
 package com.app.services;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.app.entites.Product;
 import com.app.payloads.ProductDTO;
+import com.app.payloads.ProductResponse;
 
 public interface ProductService {
 
-	ProductDTO addProduct(Long categoryId, Product product);
+	ProductDTO addProduct(Long categoryId, Product product, MultipartFile image);
 
-	List<ProductDTO> getAllProducts();
+	ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-	List<ProductDTO> searchByCategory(Long categoryId);
+	ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-	ProductDTO updateProduct(Long productId, Product product);
+	ProductDTO updateProduct(Long productId, Product product, MultipartFile image);
 
 	String deleteProduct(Long productId);
 }

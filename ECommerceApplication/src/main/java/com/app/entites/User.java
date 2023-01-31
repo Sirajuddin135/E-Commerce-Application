@@ -35,16 +35,16 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	@Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
 	@Size(min = 5, max = 20, message = "First Name must be between 5 and 30 characters long")
+	@Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
 	private String firstName;
 
-	@Pattern(regexp = "^[a-zA-Z]*$", message = "Last Name must not contain numbers or special characters")
 	@Size(min = 5, max = 20, message = "Last Name must be between 5 and 30 characters long")
+	@Pattern(regexp = "^[a-zA-Z]*$", message = "Last Name must not contain numbers or special characters")
 	private String lastName;
 
-	@Pattern(regexp = "^\\d{10}$", message = "Mobile Number must contain only Numbers")
 	@Size(min = 10, max = 10, message = "Mobile Number must be exactly 10 digits long")
+	@Pattern(regexp = "^\\d{10}$", message = "Mobile Number must contain only Numbers")
 	private String mobileNumber;
 
 	@Email

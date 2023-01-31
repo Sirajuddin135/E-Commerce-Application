@@ -3,6 +3,7 @@ package com.app.services;
 import java.util.List;
 
 import com.app.payloads.OrderDTO;
+import com.app.payloads.OrderResponse;
 
 public interface OrderService {
 	
@@ -12,7 +13,7 @@ public interface OrderService {
 	
 	OrderDTO getOrder(String emailId, Long orderId);
 	
-	List<OrderDTO> getAllOrders();
+	OrderResponse getAllOrders(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	
 	OrderDTO updateOrder(String emailId, Long orderId, String orderStatus);
 }

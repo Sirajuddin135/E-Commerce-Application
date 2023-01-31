@@ -1,11 +1,17 @@
 package com.app.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.app.entites.Cart;
 import com.app.entites.Category;
@@ -14,6 +20,7 @@ import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.CartDTO;
 import com.app.payloads.ProductDTO;
+import com.app.payloads.ProductResponse;
 import com.app.repositories.CartRepo;
 import com.app.repositories.CategoryRepo;
 import com.app.repositories.ProductRepo;
@@ -40,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public ProductDTO addProduct(Long categoryId, Product product) {
+	public ProductDTO addProduct(Long categoryId, Product product, MultipartFile image) {
 
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
@@ -59,6 +66,15 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		if (isProductNotPresent) {
+			try {
+				byte[] imageBytes = image.getBytes();
+				
+				product.setImage(imageBytes);
+			} catch (IOException e) {
+				System.out.println("Product image is null");
+				product.setImage(null);
+			}
+			
 			product.setCategory(category);
 
 			double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
@@ -73,22 +89,47 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getAllProducts() {
-		List<Product> products = productRepo.findAll();
+	public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
+
+		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+		Page<Product> pageProducts = productRepo.findAll(pageDetails);
+
+		List<Product> products = pageProducts.getContent();
 
 		List<ProductDTO> productDTOs = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
 				.collect(Collectors.toList());
 
-		return productDTOs;
+		ProductResponse productResponse = new ProductResponse();
+
+		productResponse.setContent(productDTOs);
+		productResponse.setPageNumber(pageProducts.getNumber());
+		productResponse.setPageSize(pageProducts.getSize());
+		productResponse.setTotalElements(pageProducts.getTotalElements());
+		productResponse.setTotalPages(pageProducts.getTotalPages());
+		productResponse.setLastPage(pageProducts.isLast());
+
+		return productResponse;
 	}
 
 	@Override
-	public List<ProductDTO> searchByCategory(Long categoryId) {
+	public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
+			String sortOrder) {
 
-		Category category = categoryRepo.findById(categoryId)
+		categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-		List<Product> products = category.getProducts();
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
+
+		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+		Page<Product> pageProducts = productRepo.findAll(pageDetails);
+
+		List<Product> products = pageProducts.getContent();
 
 		if (products.size() == 0) {
 			throw new APIException("Category " + categoryId + " doesn't contain any products !!!");
@@ -97,11 +138,20 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDTO> productDTOs = products.stream().map(p -> modelMapper.map(p, ProductDTO.class))
 				.collect(Collectors.toList());
 
-		return productDTOs;
+		ProductResponse productResponse = new ProductResponse();
+
+		productResponse.setContent(productDTOs);
+		productResponse.setPageNumber(pageProducts.getNumber());
+		productResponse.setPageSize(pageProducts.getSize());
+		productResponse.setTotalElements(pageProducts.getTotalElements());
+		productResponse.setTotalPages(pageProducts.getTotalPages());
+		productResponse.setLastPage(pageProducts.isLast());
+
+		return productResponse;
 	}
 
 	@Override
-	public ProductDTO updateProduct(Long productId, Product product) {
+	public ProductDTO updateProduct(Long productId, Product product, MultipartFile image) {
 		Product productFromDB = productRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
@@ -109,6 +159,14 @@ public class ProductServiceImpl implements ProductService {
 			throw new APIException("Product not found with productId: " + productId);
 		}
 
+		try {
+			byte[] imageBytes = image.getBytes();
+			
+			product.setImage(imageBytes);
+		} catch (IOException e) {
+			System.out.println("Product image is default");
+		}
+		
 		product.setProductId(productId);
 		product.setCategory(productFromDB.getCategory());
 

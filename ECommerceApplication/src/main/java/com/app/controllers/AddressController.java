@@ -19,6 +19,7 @@ import com.app.payloads.AddressDTO;
 import com.app.services.AddressService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -30,7 +31,7 @@ public class AddressController {
 	private AddressService addressService;
 	
 	@PostMapping("/address")
-	public ResponseEntity<AddressDTO> createAddress(@RequestBody AddressDTO addressDTO) {
+	public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDTO) {
 		AddressDTO savedAddressDTO = addressService.createAddress(addressDTO);
 		
 		return new ResponseEntity<AddressDTO>(savedAddressDTO, HttpStatus.CREATED);

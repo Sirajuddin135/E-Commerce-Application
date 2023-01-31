@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,7 @@ import com.app.payloads.AddressDTO;
 import com.app.payloads.CartDTO;
 import com.app.payloads.ProductDTO;
 import com.app.payloads.UserDTO;
+import com.app.payloads.UserResponse;
 import com.app.repositories.AddressRepo;
 import com.app.repositories.RoleRepo;
 import com.app.repositories.UserRepo;
@@ -45,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
 
@@ -58,11 +63,11 @@ public class UserServiceImpl implements UserService {
 			Cart cart = new Cart();
 			user.setCart(cart);
 
-			if(roleName != null && roleName.equalsIgnoreCase("ADMIN")) {
+			if (roleName != null && roleName.equalsIgnoreCase("ADMIN")) {
 				Role role = roleRepo.findById(AppConstants.ADMIN_ID).get();
 				user.getRoles().add(role);
 			}
-			
+
 			Role role = roleRepo.findById(AppConstants.USER_ID).get();
 			user.getRoles().add(role);
 
@@ -75,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
 			Address address = addressRepo.findByCountryAndStateAndCityAndPincodeAndStreetAndBuildingName(country, state,
 					city, pincode, street, buildingName);
-			
+
 			if (address == null) {
 				address = new Address(country, state, city, pincode, street, buildingName);
 
@@ -83,9 +88,9 @@ public class UserServiceImpl implements UserService {
 			}
 
 			user.setAddresses(List.of(address));
-			
-			User registeredUser = userRepo.save(user);			
-			
+
+			User registeredUser = userRepo.save(user);
+
 			cart.setUser(registeredUser);
 
 			userDTO = modelMapper.map(registeredUser, UserDTO.class);
@@ -100,8 +105,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDTO> getAllUsers() {
-		List<User> users = userRepo.findAll();
+	public UserResponse getAllUsers(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
+
+		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+		
+		Page<User> pageUsers = userRepo.findAll(pageDetails);
+		
+		List<User> users = pageUsers.getContent();
 
 		if (users.size() == 0) {
 			throw new APIException("No User exists !!!");
@@ -110,7 +122,7 @@ public class UserServiceImpl implements UserService {
 		List<UserDTO> userDTOs = users.stream().map(user -> {
 			UserDTO dto = modelMapper.map(user, UserDTO.class);
 
-			if(user.getAddresses().size() != 0) {
+			if (user.getAddresses().size() != 0) {
 				dto.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
 			}
 
@@ -127,7 +139,16 @@ public class UserServiceImpl implements UserService {
 
 		}).collect(Collectors.toList());
 
-		return userDTOs;
+		UserResponse userResponse = new UserResponse();
+		
+		userResponse.setContent(userDTOs);
+		userResponse.setPageNumber(pageUsers.getNumber());
+		userResponse.setPageSize(pageUsers.getSize());
+		userResponse.setTotalElements(pageUsers.getTotalElements());
+		userResponse.setTotalPages(pageUsers.getTotalPages());
+		userResponse.setLastPage(pageUsers.isLast());
+		
+		return userResponse;
 	}
 
 	@Override
@@ -157,33 +178,33 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 
 		String encodedPass = passwordEncoder.encode(userDTO.getPassword());
-		
+
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
 		user.setMobileNumber(userDTO.getMobileNumber());
 		user.setEmail(userDTO.getEmail());
 		user.setPassword(encodedPass);
 
-		if(userDTO.getAddress() != null) {
+		if (userDTO.getAddress() != null) {
 			String country = userDTO.getAddress().getCountry();
 			String state = userDTO.getAddress().getState();
 			String city = userDTO.getAddress().getCity();
 			String pincode = userDTO.getAddress().getPincode();
 			String street = userDTO.getAddress().getStreet();
 			String buildingName = userDTO.getAddress().getBuildingName();
-	
+
 			Address address = addressRepo.findByCountryAndStateAndCityAndPincodeAndStreetAndBuildingName(country, state,
 					city, pincode, street, buildingName);
-	
+
 			if (address == null) {
 				address = new Address(country, state, city, pincode, street, buildingName);
-	
+
 				address = addressRepo.save(address);
-	
+
 				user.setAddresses(List.of(address));
 			}
 		}
-		
+
 		userDTO = modelMapper.map(user, UserDTO.class);
 
 		userDTO.setAddress(modelMapper.map(user.getAddresses().stream().findFirst().get(), AddressDTO.class));
