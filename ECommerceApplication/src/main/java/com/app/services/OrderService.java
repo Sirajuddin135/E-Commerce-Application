@@ -9,9 +9,9 @@ public interface OrderService {
 	
 	OrderDTO placeOrder(String emailId, Long cartId, String paymentMethod);
 	
-	List<OrderDTO> getOrdersByUser(String emailId);
-	
 	OrderDTO getOrder(String emailId, Long orderId);
+	
+	List<OrderDTO> getOrdersByUser(String emailId);
 	
 	OrderResponse getAllOrders(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	

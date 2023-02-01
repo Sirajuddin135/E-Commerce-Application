@@ -1,5 +1,7 @@
 package com.app.controllers;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +34,9 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping("/categories/{categoryId}/product")
-	public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product, @PathVariable Long categoryId,
-			@RequestParam("image") MultipartFile image) {
+	public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody Product product, @PathVariable Long categoryId) {
 
-		ProductDTO savedProduct = productService.addProduct(categoryId, product, image);
+		ProductDTO savedProduct = productService.addProduct(categoryId, product);
 
 		return new ResponseEntity<ProductDTO>(savedProduct, HttpStatus.CREATED);
 	}
@@ -52,7 +53,7 @@ public class ProductController {
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.FOUND);
 	}
 
-	@GetMapping("/categories/{categoryId}")
+	@GetMapping("/categories/{categoryId}/products")
 	public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable Long categoryId,
 			@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
@@ -64,11 +65,31 @@ public class ProductController {
 
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.FOUND);
 	}
+	
+	@GetMapping("/products/keyword/{keyword}")
+	public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword,
+			@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+			@RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCTS_BY, required = false) String sortBy,
+			@RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+
+		ProductResponse productResponse = productService.searchProductByKeyword(keyword, pageNumber, pageSize, sortBy,
+				sortOrder);
+
+		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.FOUND);
+	}
 
 	@PutMapping("/products/{productId}")
-	public ResponseEntity<ProductDTO> updateProductByCategory(@RequestBody Product product,
-			@PathVariable Long productId, @RequestParam("image") MultipartFile image) {
-		ProductDTO updatedProduct = productService.updateProduct(productId, product, image);
+	public ResponseEntity<ProductDTO> updateProduct(@RequestBody Product product,
+			@PathVariable Long productId) {
+		ProductDTO updatedProduct = productService.updateProduct(productId, product);
+
+		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
+	}
+	
+	@PutMapping("/products/{productId}/image")
+	public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId, @RequestParam("image") MultipartFile image) throws IOException {
+		ProductDTO updatedProduct = productService.updateProductImage(productId, image);
 
 		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
 	}

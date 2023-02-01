@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -35,9 +34,7 @@ public class Product {
 	@Size(min = 3, message = "Product name must contain atleast 3 characters")
 	private String productName;
 	
-	@NotBlank
-	@Lob
-	private byte[] image;
+	private String image;
 	
 	@NotBlank
 	@Size(min = 6, message = "Product description must contain atleast 6 characters")

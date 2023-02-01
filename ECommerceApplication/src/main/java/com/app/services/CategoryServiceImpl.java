@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
 		List<Category> categories = pageCategories.getContent();
 
 		if (categories.size() == 0) {
-			throw new APIException("No category is created till now!!!");
+			throw new APIException("No category is created till now");
 		}
 
 		List<CategoryDTO> categoryDTOs = categories.stream()

@@ -52,7 +52,7 @@ public class CartServiceImpl implements CartService {
 		}
 
 		if (product.getQuantity() == 0) {
-			throw new APIException("Product: " + product.getProductName() + " not available !!!");
+			throw new APIException(product.getProductName() + " is not available");
 		}
 
 		if (product.getQuantity() < quantity) {
@@ -90,7 +90,7 @@ public class CartServiceImpl implements CartService {
 		List<Cart> carts = cartRepo.findAll();
 
 		if (carts.size() == 0) {
-			throw new APIException("No cart exists !!!");
+			throw new APIException("No cart exists");
 		}
 
 		List<CartDTO> cartDTOs = carts.stream().map(cart -> {
@@ -158,7 +158,7 @@ public class CartServiceImpl implements CartService {
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
 		if (product.getQuantity() == 0) {
-			throw new APIException("Product: " + product.getProductName() + " not available !!!");
+			throw new APIException(product.getProductName() + " is not available");
 		}
 
 		if (product.getQuantity() < quantity) {

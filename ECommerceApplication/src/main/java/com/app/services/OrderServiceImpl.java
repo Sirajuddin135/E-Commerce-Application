@@ -22,6 +22,7 @@ import com.app.entites.Product;
 import com.app.exceptions.APIException;
 import com.app.exceptions.ResourceNotFoundException;
 import com.app.payloads.OrderDTO;
+import com.app.payloads.OrderItemDTO;
 import com.app.payloads.OrderResponse;
 import com.app.repositories.CartItemRepo;
 import com.app.repositories.CartRepo;
@@ -93,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 		List<CartItem> cartItems = cart.getCartItems();
 
 		if (cartItems.size() == 0) {
-			throw new APIException("Cart is empty!!");
+			throw new APIException("Cart is empty");
 		}
 
 		List<OrderItem> orderItems = new ArrayList<>();
@@ -110,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
 			orderItems.add(orderItem);
 		}
 
-		orderItemRepo.saveAll(orderItems);
+		orderItems = orderItemRepo.saveAll(orderItems);
 
 		cart.getCartItems().forEach(item -> {
 			int quantity = item.getQuantity();
@@ -123,6 +124,8 @@ public class OrderServiceImpl implements OrderService {
 		});
 
 		OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);
+		
+		orderItems.forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
 
 		return orderDTO;
 	}
@@ -167,7 +170,7 @@ public class OrderServiceImpl implements OrderService {
 
 		List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class))
 				.collect(Collectors.toList());
-
+		
 		if (orderDTOs.size() == 0) {
 			throw new APIException("No orders placed yet by the users");
 		}
