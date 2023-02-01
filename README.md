@@ -16,8 +16,8 @@
 - Registration & Login
 - Fetching categories and also products based on category
 - Adding & deleting products to cart
-- Ordering products
 - Managing address and products quantity
+- Ordering products and fetching order status
 
 # Security
 - The API is secured using JSON Web Tokens (JWT) handled by Auth0. To access the API, you will need to obtain a JWT by authenticating with the /login endpoint. The JWT should then be passed in the Authorize option available in the Swagger-ui.
