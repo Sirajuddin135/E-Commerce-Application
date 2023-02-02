@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,14 +40,13 @@ public class AuthController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	@PostMapping("/register/roleName/{roleName}")
-	public ResponseEntity<Map<String, Object>> registerHandler(@Valid @RequestBody UserDTO user,
-			@PathVariable String roleName) throws UserNotFoundException {
+	@PostMapping("/register")
+	public ResponseEntity<Map<String, Object>> registerHandler(@Valid @RequestBody UserDTO user) throws UserNotFoundException {
 		String encodedPass = passwordEncoder.encode(user.getPassword());
 
 		user.setPassword(encodedPass);
 
-		UserDTO userDTO = userService.registerUser(user, roleName);
+		UserDTO userDTO = userService.registerUser(user);
 
 		String token = jwtUtil.generateToken(userDTO.getEmail());
 
