@@ -6,14 +6,16 @@
 
 # Features
 ## Admin:-
-- Registration & Login
-- Creating & managing categories
-- Adding & managing products
-- Managing discount & price of products
-- Fetching & managing Orders
+- Login
+- Users
+- Address
+- Categories
+- Products
+- Price & discount
+- Orders
 ## User:-
 - Registration & Login
-- Fetching categories and also products based on category
+- Fetch categories and products based on category
 - Adding & deleting products to cart
 - Managing address and products quantity
 - Ordering products and fetching order status
@@ -48,16 +50,19 @@
 # API documentation
 - API documentation is available via Swagger UI at http://localhost:8080/swagger-ui.html.
 
-<!-- # E-Commerce Application Image
-<img width="188" alt="Event-Scheduler-Image" src="https://user-images.githubusercontent.com/101395494/211131507-fb25a63c-c620-4d2f-8446-c97aa6316ce9.png"> -->
-
 # ER-Diagram
 <img width="605" alt="ER-Diagram" src="https://user-images.githubusercontent.com/101395494/216134703-e7cefef6-187f-44df-9fd4-52aedc66d24b.png">
 
 # Swagger-ui
-<!-- <img width="948" alt="Swagger-ui" src="https://user-images.githubusercontent.com/101395494/210170660-4f6bd3b0-ec1b-411f-82c1-c059ad14d567.png"> -->
+<img width="947" alt="Swagger-UI" src="https://user-images.githubusercontent.com/101395494/216388614-f8eed33e-cbbb-4cfa-997e-b76674bbb465.png">
 
-<!-- # API Controllers
-<img width="939" alt="Event App Controllers" src="https://user-images.githubusercontent.com/101395494/210179001-2b271f7a-6f13-4060-979b-e88e5a803a93.png"> -->
+# API Controllers
+<img width="947" alt="Auth_Controller" src="https://user-images.githubusercontent.com/101395494/216388749-4f15d968-ae52-48a9-9c08-0b72d608084a.png">
+<img width="947" alt="User_Controller" src="https://user-images.githubusercontent.com/101395494/216388797-0feb854d-4470-4e2f-9dba-fd83155af6df.png">
+<img width="947" alt="Address_Controller" src="https://user-images.githubusercontent.com/101395494/216388840-0a31a552-63e3-4b10-9fab-c6c705cd7af4.png">
+<img width="947" alt="Cart_Controller" src="https://user-images.githubusercontent.com/101395494/216388895-736fa8c1-7784-4d4d-8768-c619e6fd0e6f.png">
+<img width="947" alt="Category_Controller" src="https://user-images.githubusercontent.com/101395494/216388926-88c45391-d35b-4359-b239-86acb63ccb6b.png">
+<img width="947" alt="Product_Controller" src="https://user-images.githubusercontent.com/101395494/216388953-805c657d-16f0-4b79-a771-3c3d6567e7c6.png">
+<img width="947" alt="Order_Controller" src="https://user-images.githubusercontent.com/101395494/216388971-7d654a8e-6abc-4548-80c6-8d1173f56bc4.png">
 
 # Thank You
