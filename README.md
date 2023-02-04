@@ -27,7 +27,7 @@
   - Authorization: <your_jwt>
 
 # Technologies:
-- Java
+- Java 17 or above
 - Spring Boot 3.0
 - Maven
 - MySQL
@@ -48,7 +48,7 @@
 5. The app will be running at http://localhost:8080.
 
 # API documentation
-- API documentation is available via Swagger UI at http://localhost:8080/swagger-ui.html.
+- API documentation is available via Swagger UI at http://localhost:8080/swagger-ui/index.html
 
 # ER-Diagram
 <img width="605" alt="ER-Diagram" src="https://user-images.githubusercontent.com/101395494/216134703-e7cefef6-187f-44df-9fd4-52aedc66d24b.png">
@@ -58,11 +58,11 @@
 
 # API Controllers
 <img width="947" alt="Auth_Controller" src="https://user-images.githubusercontent.com/101395494/216388749-4f15d968-ae52-48a9-9c08-0b72d608084a.png">
-<img width="947" alt="User_Controller" src="https://user-images.githubusercontent.com/101395494/216388797-0feb854d-4470-4e2f-9dba-fd83155af6df.png">
+<img width="947" alt="User_Controller" src="https://user-images.githubusercontent.com/101395494/216755281-ebacb2a4-3f02-4d41-a695-d508ee537db1.png">
 <img width="947" alt="Address_Controller" src="https://user-images.githubusercontent.com/101395494/216388840-0a31a552-63e3-4b10-9fab-c6c705cd7af4.png">
 <img width="947" alt="Cart_Controller" src="https://user-images.githubusercontent.com/101395494/216388895-736fa8c1-7784-4d4d-8768-c619e6fd0e6f.png">
 <img width="947" alt="Category_Controller" src="https://user-images.githubusercontent.com/101395494/216388926-88c45391-d35b-4359-b239-86acb63ccb6b.png">
-<img width="947" alt="Product_Controller" src="https://user-images.githubusercontent.com/101395494/216388953-805c657d-16f0-4b79-a771-3c3d6567e7c6.png">
+<img width="947" alt="Product_Controller" src="https://user-images.githubusercontent.com/101395494/216755314-56904892-4a1d-4bc3-b40d-b9d76525ec83.png">
 <img width="947" alt="Order_Controller" src="https://user-images.githubusercontent.com/101395494/216388971-7d654a8e-6abc-4548-80c6-8d1173f56bc4.png">
 
 # Thank You
