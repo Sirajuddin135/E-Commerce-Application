@@ -45,7 +45,6 @@
   - Browse to the project directory and click Finish
 3. Update the values in application.properties with your MySQL database connection details.
 4. Run the app: Right-click the project in the Package Explorer and click Run As > Spring Boot App.
-5. The app will be running at http://localhost:8080.
 
 # API documentation
 - API documentation is available via Swagger UI at http://localhost:8080/swagger-ui/index.html
